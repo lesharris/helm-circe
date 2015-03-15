@@ -69,7 +69,9 @@
 					(or (helm-circe/circe-query-buffers)
 						(list ""))))
 	(action . (("Switch to query" . (lambda (candidate)
-										(switch-to-buffer candidate)))))))
+									  (switch-to-buffer candidate)))
+			   ("Close query" . (lambda (candidate)
+							   (kill-buffer candidate)))))))
 
 (defvar helm-circe/circe-server-buffer-source
   '((name . "Servers")
