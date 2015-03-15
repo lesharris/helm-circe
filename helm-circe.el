@@ -37,27 +37,56 @@
 (require 'helm)
 (require 'circe)
 
-(defun helm-circe/irc-buffers ()
-  "Filter for buffers that are circe servers and channels"
+(defun helm-circe/circe-channel-buffers ()
+  "Filter for circe channel buffers"
   (cl-loop for buf in (buffer-list)
-		   if (or (eq 'circe-server-mode (buffer-local-value 'major-mode buf))
-				  (eq 'circe-channel-mode (buffer-local-value 'major-mode buf)))
+		   if (eq 'circe-channel-mode (buffer-local-value 'major-mode buf))
 		   collect (buffer-name buf)))
 
-(defvar helm-circe/circe-buffer-source
-  '((name . "Circe Channels and Servers")
+(defun helm-circe/circe-server-buffers ()
+  "Filter for circe server buffers"
+  (cl-loop for buf in (buffer-list)
+		   if (eq 'circe-server-mode (buffer-local-value 'major-mode buf))
+		   collect (buffer-name buf)))
+
+(defun helm-circe/circe-query-buffers ()
+  "Filter for circe query buffers"
+  (cl-loop for buf in (buffer-list)
+		   if (eq 'circe-query-mode (buffer-local-value 'major-mode buf))
+		   collect (buffer-name buf)))
+
+(defvar helm-circe/circe-channel-buffer-source
+  '((name . "Channels")
 	(candidates . (lambda ()
-					(or (helm-circe/irc-buffers)
+					(or (helm-circe/circe-channel-buffers)
 						(list ""))))
 	(action . (("Switch to channel" . (lambda (candidate)
-									   (switch-to-buffer candidate)))))))
+										(switch-to-buffer candidate)))))))
+
+(defvar helm-circe/circe-query-buffer-source
+  '((name . "Queries")
+	(candidates . (lambda ()
+					(or (helm-circe/circe-query-buffers)
+						(list ""))))
+	(action . (("Switch to query" . (lambda (candidate)
+										(switch-to-buffer candidate)))))))
+
+(defvar helm-circe/circe-server-buffer-source
+  '((name . "Servers")
+	(candidates . (lambda ()
+					(or (helm-circe/circe-server-buffers)
+						(list ""))))
+	(action . (("Switch to server buffer" . (lambda (candidate)
+											  (switch-to-buffer candidate)))))))
 
 ;;;###autoload
 (defun helm-circe ()
   "Custom helm buffer for circe channel and server buffers only."
   (interactive)
   (let ((sources
-        '(helm-circe/circe-buffer-source)))
+		 '(helm-circe/circe-channel-buffer-source
+		   helm-circe/circe-query-buffer-source
+		   helm-circe/circe-server-buffer-source)))
     (helm :sources sources
           :buffer "*helm-circe*")))
 
