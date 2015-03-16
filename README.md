@@ -1,5 +1,4 @@
-[![MELPA](http://melpa.org/packages/helm-circe-badge.svg)](http://melpa.org/#/helm-circe)
-
+[![MELPA](http://melpa.org/packages/helm-circe-badge.svg)](http://melpa.org/#/helm-circe) [![MELPA Stable](http://stable.melpa.org/packages/helm-circe-badge.svg)](http://stable.melpa.org/#/helm-circe)
 # helm-circe
 
 Helm bindings for managing circe buffers.
