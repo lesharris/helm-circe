@@ -14,7 +14,11 @@ them in bulk if desired.
 
 ![helm-circe](helm-circe.png)
 
-# Setup Invoke `helm-circe` and bind it to a keyboard shortcut
+# Setup
 
-``` (require 'helm-circe) (global-set-key (kbd "C-c c i") 'helm-circe)
+Invoke `helm-circe` and bind it to a keyboard shortcut.
+
+```
+(require 'helm-circe)
+(global-set-key (kbd "C-c c i") 'helm-circe)
 ```
