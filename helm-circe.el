@@ -58,6 +58,29 @@
            if (eq 'circe-query-mode (buffer-local-value 'major-mode buf))
            collect (buffer-name buf)))
 
+(defun helm-circe/circe-gen-channels-from-server--buffers ()
+  "Populates helm-circe/circe-channels-by-server-source"
+  (let ((servers (helm-circe/circe-server-buffers))
+        (curbuf (current-buffer)))
+    (save-excursion
+      (setq helm-circe/circe-channels-by-server--source nil)
+      (cl-dolist (server servers)
+        (switch-to-buffer server)
+        (let ((server-name server)
+              (chat-buffers (helm-circe/get-hash--keys circe-server-chat-buffers)))
+          (push
+           `((name . ,server-name)
+             (candidates . (lambda ()
+                             (or ',chat-buffers
+                                 (list ""))))
+             (action . (("Switch to channel" . (lambda (candidate)
+                                                 (switch-to-buffer candidate)))
+                        ("Part from channel" . (lambda (candidate)
+                                                 (kill-buffer candidate)))
+                        ("Close marked items" 'helm-circe/close-marked-buffers))))
+           helm-circe/circe-channels-by-server--source)))
+      (switch-to-buffer curbuf))))
+
 (defun helm-circe/close-marked-buffers (ignored)
   "Delete marked circe buffers. The IGNORED argument is not used."
   (let* ((buffers (helm-marked-candidates :with-wildcard t))
@@ -67,6 +90,14 @@
       (cl-dolist (b buffers)
         (kill-buffer b))
       (message "%s circe buffers closed" len))))
+
+(defun helm-circe/get-hash--keys (hashtable)
+  "Return all keys in hashtable."
+  (let (allkeys)
+    (maphash (lambda (kk vv) (setq allkeys (cons kk allkeys))) hashtable)
+    allkeys))
+
+(defvar helm-circe/circe-channels-by-server--source nil)
 
 (defvar helm-circe/circe-channel-buffer-source
   '((name . "Channels")
@@ -111,6 +142,16 @@
            helm-circe/circe-server-buffer-source)))
     (helm :sources sources
           :buffer "*helm-circe*")))
+
+;;;###autoload
+(defun helm-circe-by-server ()
+  "Displays a candidate list of channels by listed by server"
+  (interactive)
+  (helm-circe/circe-gen-channels-from-server--buffers)
+  (let ((sources
+         `,helm-circe/circe-channels-by-server--source))
+    (helm :sources sources
+          :buffer "*helm-circe-by-server*")))
 
 (provide 'helm-circe)
 
