@@ -17,9 +17,29 @@ them in bulk if desired.
 
 # Setup
 
-Invoke `helm-circe` and bind it to a keyboard shortcut.
+Invoke `helm-circe` and bind it to a keyboard shortcut.  See Commands
+for additional commands that you might want to key bind.
 
 ```
 (require 'helm-circe)
 (global-set-key (kbd "C-c c i") 'helm-circe)
 ```
+
+# Commands
+`helm-circe`
+Main command that displays channels, queries, and servers in different
+sections of the candidate list.
+
+`helm-circe-by-server`
+Displays a candidate list of channels with each channel in a specific
+server section in the candidate list.
+
+`helm-circe-channels`
+Displays all channels in a single candidate list regardless of server.
+
+`helm-circe-servers`
+Displays all circe server buffers in a candidate list.
+
+`helm-circe-queries`
+Displays all circe query buffers in a candidate list.
+
