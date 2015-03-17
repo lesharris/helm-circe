@@ -17,7 +17,7 @@
 
 ;; Author: Les Harris <les@lesharris.com>
 ;; URL: https://github.com/lesharris/helm-circe
-;; Version: 0.2
+;; Version: 0.3
 ;; Package-Requires: ((emacs "24") (helm "0.0") (circe "0.0") (cl-lib "0.5"))
 ;; Keywords: helm circe
 
@@ -57,6 +57,10 @@
   (cl-loop for buf in (buffer-list)
            if (eq 'circe-query-mode (buffer-local-value 'major-mode buf))
            collect (buffer-name buf)))
+
+(defun helm-circe/circe-recent-buffers ()
+  "Filter for circe buffers with activity"
+  tracking-buffers)
 
 (defun helm-circe/circe-gen-channels-from-server--buffers ()
   "Populates helm-circe/circe-channels-by-server-source"
@@ -132,6 +136,17 @@
                                              (kill-buffer candidate)))
                ("Close marked items" 'helm-circe/close-marked-buffers)))))
 
+(defvar helm-circe/circe-new-activity-source
+  '((name . "New Activity")
+    (candidates . (lambda ()
+                    (or (helm-circe/circe-recent-buffers)
+                        (list ""))))
+    (action . (("Switch to channel" . (lambda (candidate)
+                                              (switch-to-buffer candidate)))
+               ("Part from channel" . (lambda (candidate)
+                                             (kill-buffer candidate)))
+               ("Close marked items" 'helm-circe/close-marked-buffers)))))
+
 ;;;###autoload
 (defun helm-circe ()
   "Custom helm buffer for circe channel and server buffers only."
@@ -142,6 +157,15 @@
            helm-circe/circe-server-buffer-source)))
     (helm :sources sources
           :buffer "*helm-circe*")))
+
+;;;###autoload
+(defun helm-circe-new-activity ()
+  "Displays a candidate list of channels with new activity since last view"
+  (interactive)
+  (let ((sources
+         '(helm-circe/circe-new-activity-source)))
+    (helm :sources sources
+          :buffer "*helm-circe-new-activity*")))
 
 ;;;###autoload
 (defun helm-circe-by-server ()

@@ -23,12 +23,19 @@ for additional commands that you might want to key bind.
 ```
 (require 'helm-circe)
 (global-set-key (kbd "C-c c i") 'helm-circe)
+; Handy to have a binding to helm-circe-new-activity
+(global-set-key (kbd "C-c c n") 'helm-circe-new-activity)
 ```
 
 # Commands
 `helm-circe`
 Main command that displays channels, queries, and servers in different
 sections of the candidate list.
+
+`helm-circe-new-activity`
+Displays a candidate list of channels that have had activity since
+last viewed. Mirrors what tracking-mode puts in the mode line... but
+in helm so much faster.
 
 `helm-circe-by-server`
 Displays a candidate list of channels with each channel in a specific
