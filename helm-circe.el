@@ -153,6 +153,33 @@
     (helm :sources sources
           :buffer "*helm-circe-by-server*")))
 
+;;;###autoload
+(defun helm-circe-channels ()
+  "Displays a candidate list consisting of all channels from every server"
+  (interactive)
+  (let ((sources
+         '(helm-circe/circe-channel-buffer-source)))
+    (helm :sources sources
+          :buffer "*helm-circe-channels*")))
+
+;;;###autoload
+(defun helm-circe-servers ()
+  "Displays a candidate list consiting of all servers"
+  (interactive)
+  (let ((sources
+         '(helm-circe/circe-server-buffer-source)))
+    (helm :sources sources
+          :buffer "*helm-circe-servers*")))
+
+;;;###autoload
+(defun helm-circe-queries ()
+  "Displays a candidate list consistin of all queries"
+  (interactive)
+  (let ((sources
+         '(helm-circe/circe-query-buffer-source)))
+    (helm :sources sources
+          :buffer "*helm-circe-queries*")))
+
 (provide 'helm-circe)
 
 ;;; helm-circe.el ends here
