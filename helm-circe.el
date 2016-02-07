@@ -17,7 +17,7 @@
 
 ;; Author: Les Harris <les@lesharris.com>
 ;; URL: https://github.com/lesharris/helm-circe
-;; Version: 0.3
+;; Version: 0.4
 ;; Package-Requires: ((emacs "24") (helm "0.0") (circe "0.0") (cl-lib "0.5"))
 ;; Keywords: helm circe
 
@@ -71,7 +71,7 @@
       (cl-dolist (server servers)
         (switch-to-buffer server)
         (let ((server-name server)
-              (chat-buffers (helm-circe/get-hash--keys circe-server-chat-buffers)))
+              (chat-buffers (mapcar 'buffer-name (circe-server-chat-buffers))))
           (push
            `((name . ,server-name)
              (candidates . (lambda ()
